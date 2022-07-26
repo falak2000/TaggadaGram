@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Button, Paper, Grid, Typography, Container } from "@material-ui/core";
+import { Avatar, Button, Paper, Grid, Typography, Container, Link } from "@material-ui/core";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
 import useStyles from './style';
@@ -26,41 +26,35 @@ const Auth = () => {
     return (
         <Container component="main" maxwidth="xs">
             <Paper className={classes.paper} elevation={3}>
-                <Avatar className={classes.Avatar}>
+                {/* <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
-                </Avatar>
+                </Avatar> */}
 
                 <Typography variant="h5"> {isSignup ? 'Sign Up' : ' Sign In'}</Typography>
-                <form className={classes.form} onSubmit={handleSubmit}>
-                    <Grid container spacing={2} direction='column'>
+                <Paper component='form' className={classes.form} onSubmit={handleSubmit} elevation={1}>
+                    <Grid container spacing={2}>
                         {
                             isSignup && (
                                 <>
-                                    <Grid container spacing={2} direction='row'>
                                         <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half></Input>
                                         <Input name="lastName" label="Last Name" handleChange={handleChange} half ></Input>
-                                    </Grid>
-
                                 </>
 
                             )
                         }
 
-                        <Input fullWidth="true" name="email" label="Email Address" handleChange={handleChange} type="email" />
+                        <Input name="email" label="Email Address" handleChange={handleChange} type="email"  />
 
-                        <Grid container spacing={2} direction='row'>
-                            <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword} />
+                        <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword} />
 
-                            {isSignup && <Input name="confirmPassword" label="Reapeat Password" handleChange={handleChange} type="password" />}
-                        </Grid>
-
+                        {isSignup && <Input name="confirmPassword" label="Reapeat Password" handleChange={handleChange} type="password" />}
+                                        
                     </Grid>
-
-                    <Grid>
-                        <Button type="submit" fillwidth varient="contained" color="blue">
-                            {isSignup ? 'Sign Up' : 'Sign In'}</Button>
-                    </Grid>
-                </form>
+                    <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                        {isSignup ? 'Sign Up' : 'Sign In'}
+                    </Button>
+                    <Typography variant='body2'>Do not have an account? <Link>Create Account</Link></Typography>
+                </Paper>
             </Paper>
         </Container>
     )
