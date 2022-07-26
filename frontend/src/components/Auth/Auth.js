@@ -49,15 +49,17 @@ const Auth = () => {
                         <Input fullWidth="true" name="email" label="Email Address" handleChange={handleChange} type="email" />
 
                         <Grid container spacing={2} direction='row'>
-                            <Input fullWidth name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword} />
+                            <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword} />
 
                             {isSignup && <Input name="confirmPassword" label="Reapeat Password" handleChange={handleChange} type="password" />}
                         </Grid>
 
                     </Grid>
 
-                    <Button type="submit" fillwidth varient="contained" color="primary"></Button>
-                    {isSignup ? 'Sign Up' : 'Sign In'}
+                    <Grid>
+                        <Button type="submit" fillwidth varient="contained" color="blue">
+                            {isSignup ? 'Sign Up' : 'Sign In'}</Button>
+                    </Grid>
                 </form>
             </Paper>
         </Container>
