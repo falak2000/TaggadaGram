@@ -1,1 +1,7 @@
-/Users/falak.sharma/ola-training/backend/src/main/java/TaggadaGramApplication.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/repository/UserRepository.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/config/WebConfigAdapter.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/service/UserService.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/Entities/User.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/TaggadaGramApplication.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/repository/PostRepository.java
+/Users/falak.sharma/ola-training/social/backend/src/main/java/com/training/taggadagram/controller/HomeController.java
