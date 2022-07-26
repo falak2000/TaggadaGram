@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container } from "@material-ui/core";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
-import useStyles from './styles';
+import useStyles from './style';
 
 const Auth = () => {
 
