@@ -27,6 +27,7 @@ public class UserController {
 
     }
 
+    @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
