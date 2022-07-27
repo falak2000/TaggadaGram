@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, Link } from "@material-ui/core";
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
 import useStyles from './style';
+
+const initial = {firstName:'', lastName:'', email:'', password:'', confirmPassword:'' };
 
 const Auth = () => {
 
@@ -10,24 +11,29 @@ const Auth = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
+    const [formData, setFormData] = useState(initial);
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
 
     const handleSubmit = () => {
-
+        try {
+            if(isSignup){
+                
+            }
+        } catch (error) {
+            
+        }
     };
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]:e.target.value});
+        console.log(formData);
     }
 
     return (
         <Container component="main" maxwidth="xs">
             <Paper className={classes.paper} elevation={3}>
-                {/* <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar> */}
 
                 <Typography variant="h5"> {isSignup ? 'Sign Up' : ' Sign In'}</Typography>
                 <Paper component='form' className={classes.form} onSubmit={handleSubmit} elevation={1}>
@@ -46,7 +52,7 @@ const Auth = () => {
 
                         <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword} />
 
-                        {isSignup && <Input name="confirmPassword" label="Reapeat Password" handleChange={handleChange} type="password" />}
+                        {isSignup && <Input name="confirmPassword" label="Confirm Password" handleChange={handleChange} type="password" />}
                                         
                     </Grid>
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
