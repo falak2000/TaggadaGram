@@ -9,8 +9,7 @@ const Auth = () => {
     const classes = useStyles();
 
     const [showPassword, setShowPassword] = useState(false);
-
-    const isSignup = true;
+    const [isSignup, setIsSignup] = useState(false);
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
@@ -53,7 +52,18 @@ const Auth = () => {
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                         {isSignup ? 'Sign Up' : 'Sign In'}
                     </Button>
-                    <Typography variant='body2'>Do not have an account? <Link>Create Account</Link></Typography>
+                    {isSignup ?
+                        <Typography variant='body2'>
+                            Already have an account? 
+                            <Link className={classes.link} onClick={()=>setIsSignup(false)}>Login</Link>
+                        </Typography>
+                        :
+                        <Typography variant='body2'>
+                            Do not have an account? 
+                            <Link className={classes.link} onClick={()=>setIsSignup(true)}>Create Account</Link>
+                        </Typography>
+                    }
+                    
                 </Paper>
             </Paper>
         </Container>
