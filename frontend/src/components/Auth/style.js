@@ -33,5 +33,9 @@ export default makeStyles((theme) => ({
     },
     link: {
         cursor: 'pointer'
+    },
+    fileBase: {
+        marginLeft: theme.spacing(1),
+        marginTop: theme.spacing(1),        
     }
 }));
