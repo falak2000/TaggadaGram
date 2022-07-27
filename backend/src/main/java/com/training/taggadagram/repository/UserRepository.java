@@ -1,6 +1,5 @@
 package com.training.taggadagram.repository;
 
-import com.training.taggadagram.Entities.User;
 import com.training.taggadagram.Entities.UserSign;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

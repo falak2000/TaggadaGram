@@ -42,4 +42,6 @@ public class UserController {
             return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }

@@ -3,8 +3,9 @@ package com.training.taggadagram.Entities;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import java.util.List;
 
-@Document("UserSign")
+@Document("User")
 public class UserSign {
     @Id
     private String id;
@@ -14,6 +15,25 @@ public class UserSign {
     private String password;
     private String role;
     private String profile_pic;
+
+    private List<String> listFollowers;
+    private List<String> listFollowing;
+
+    public List<String> getListFollowers() {
+        return listFollowers;
+    }
+
+    public void setListFollowers(List<String> listFollowers) {
+        this.listFollowers = listFollowers;
+    }
+
+    public List<String> getListFollowing() {
+        return listFollowing;
+    }
+
+    public void setListFollowing(List<String> listFollowing) {
+        this.listFollowing = listFollowing;
+    }
 
     private String salt;
 
