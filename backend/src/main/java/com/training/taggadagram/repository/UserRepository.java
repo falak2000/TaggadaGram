@@ -1,6 +1,8 @@
-//package repository;
-//
-//import org.springframework.data.mongodb.repository.MongoRepository;
-//
-//public class UserRepository extends MongoRepository {
-//}
+package com.training.taggadagram.repository;
+
+import com.training.taggadagram.Entities.UserSign;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface UserRepository extends MongoRepository<UserSign,Long> {
+    UserSign findByEmail(String email);
+}
