@@ -58,6 +58,32 @@ public class UserService {
         }
         return loginResponse;
     }
+    public PasswordUpdateStatus updatePassword(PasswordUpdateEntity passwordUpdateEntity){
+        UserSign user = userRepository.findByEmail(passwordUpdateEntity.getUserEmail());
+        PasswordUpdateStatus passwordUpdateStatus= new PasswordUpdateStatus();
+        String salt = user.getSalt();
+        if(user==null){ // incorrect email address
+            passwordUpdateStatus.setStatus(false);
+            passwordUpdateStatus.setMessage("Please enter correct email address") ;
+
+
+        }else if(user.getPassword().equals(BCrypt.hashpw(passwordUpdateEntity.getCurrentPassword(),salt))){
+            // updating the current password for the user ;
+            user.setPassword(passwordUpdateEntity.getNewPassword());
+            String hashedPassword=BCrypt.hashpw(user.getPassword(),salt); //using salt
+            user.setPassword(hashedPassword); //storing hashed password
+            user.setSalt(salt);//storing  the previous salt
+            userRepository.save(user) ;
+            passwordUpdateStatus.setStatus(true);
+            passwordUpdateStatus.setMessage("PASSWORD UPDATED SUCCESSFULLY");
+
+        }else{
+            passwordUpdateStatus.setStatus(false);
+            passwordUpdateStatus.setMessage("CURRENT PASSWORD DOESNT MATCHES");
+        }
+        return passwordUpdateStatus ;
+
+    }
 
 
 }

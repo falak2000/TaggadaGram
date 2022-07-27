@@ -42,6 +42,14 @@ public class UserController {
             return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
+    public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
+         PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
+         return passwordUpdateStatus;
+
+
+    }
+
 
 
 }
