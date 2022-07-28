@@ -168,46 +168,52 @@ public class UserService {
             return "unfollow successfull";
         }
     }
-    public String getFollowers(String id){
+    public List<UserSign> getFollowers(String id){
         UserSign userSign=userRepository.findById(id);
+        List<UserSign> listOfFollowers=new ArrayList<>();
+
         if(userSign==null){
-            return "";
+            return new ArrayList<>();
         }else{
             List<String>followers=userSign.getListFollowers();
             if(followers==null){
-                return "";
+                return new ArrayList<>();
             }else{
 
                 String ans="";
-                for(String follower:followers){
+                for(String follower:followers){ //follower is ID here
                     UserSign temp=userRepository.findById(follower);
-                    ans=ans+" "+temp.getFirstname();
+                    listOfFollowers.add(temp);
                 }
 
-                return ans;
+                return listOfFollowers;
             }
         }
     }
 
-    public String getFollowing(String id){
+    public List<UserSign> getFollowing(String id){
         UserSign userSign=userRepository.findById(id);
+        List<UserSign> listOfFollowing=new ArrayList<>();
+
         if(userSign==null){
-            return "";
+            return new ArrayList<>();
         }else{
             List<String>following=userSign.getListFollowing();
             if(following==null){
-                return "";
+                return new ArrayList<>();
             }else{
                 String fans="";
                 for(String follow:following){
                     UserSign temp=userRepository.findById(follow);
-                    fans=fans+" "+temp.getFirstname();
+                    listOfFollowing.add(temp);
+
                 }
 
-                return fans;
+
             }
 
         }
+        return listOfFollowing;
     }
 
     public PasswordUpdateStatus updatePassword(PasswordUpdateEntity passwordUpdateEntity){

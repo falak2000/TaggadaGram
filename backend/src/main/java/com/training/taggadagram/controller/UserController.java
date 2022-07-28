@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
 
@@ -77,23 +79,15 @@ public class UserController {
         else return "Unsuccessfull unfollow";
     }
     @GetMapping(value = "/followers/{id}")
-    public String getFollowers(@PathVariable String id){
-        String status= userService.getFollowers(id);
-        if(status.equals("")){
-            return "NO RESULT";
-        }else{
-            return status;
-        }
+    public List<UserSign> getFollowers(@PathVariable String id){
+       return  userService.getFollowers(id);
+
     }
 
     @GetMapping(value = "/following/{id}")
-    public String getFollowing(@PathVariable String id){
-        String status= userService.getFollowing(id);
-        if(status.equals("")){
-            return "NO RESULT";
-        }else{
-            return status;
-        }
+    public List<UserSign> getFollowing(@PathVariable String id){
+       return userService.getFollowing(id);
+       // return
     }
 
 }
