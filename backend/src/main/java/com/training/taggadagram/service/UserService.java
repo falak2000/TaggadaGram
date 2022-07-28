@@ -98,23 +98,22 @@ public class UserService {
         }
         return logoutResponse;
     }
-    public String followUser(DoubleIdObject doubleIdObject){
+    public StatusMsgResponse followUser(DoubleIdObject doubleIdObject){
 
         //id1: followed user
         // id2: following user
 
         // 2 follow kar rha 1 ko, 2 ke following me 1,
+        StatusMsgResponse statusMsgResponse = new StatusMsgResponse();
         UserSign followedUser=userRepository.findById(doubleIdObject.getId1());
         UserSign follower=userRepository.findById(doubleIdObject.getId2());
 
         if(follower==null || followedUser==null){
-
-
-            return "follow unsuccessfull , either one of user is not present";
+            statusMsgResponse.setMsg("follow unsuccessfull , either one of user is not present");
+            statusMsgResponse.setStatus(false);
+            return statusMsgResponse;
         }else{
             //adding to follower list
-
-
             List<String> followerList = followedUser.getListFollowers();
             if (followerList == null) {
                 followerList = new ArrayList<>();
@@ -133,19 +132,23 @@ public class UserService {
             userRepository.save(followedUser);
             userRepository.save(follower);
 
-            return "FOLLOWER - FOLLOWING SAVED SUCCESSFULLY" ;
+            statusMsgResponse.setMsg("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY");
+            statusMsgResponse.setStatus(true);
+
+            return statusMsgResponse ;
         }
 
     }
 
-    public String unfollowUser(DoubleIdObject doubleIdObject){
+    public StatusMsgResponse unfollowUser(DoubleIdObject doubleIdObject){
+        StatusMsgResponse statusMsgResponse = new StatusMsgResponse();
         UserSign followedUser=userRepository.findById(doubleIdObject.getId1());
         UserSign follower=userRepository.findById(doubleIdObject.getId2());
 
         if(follower==null || followedUser==null){
-
-
-            return "unfollow unsuccessfull , either one of user is not present";
+            statusMsgResponse.setMsg("unfollow unsuccessfull , either one of user is not present");
+            statusMsgResponse.setStatus(false);
+            return statusMsgResponse;
         }else{
             List<String> followerList = followedUser.getListFollowers();
             if (followerList == null) {
@@ -165,7 +168,9 @@ public class UserService {
             userRepository.save(followedUser);
             userRepository.save(follower);
 
-            return "unfollow successfull";
+            statusMsgResponse.setMsg("unfollow successfull");
+            statusMsgResponse.setStatus(true);
+            return statusMsgResponse;
         }
     }
     public List<UserSign> getFollowers(String id){

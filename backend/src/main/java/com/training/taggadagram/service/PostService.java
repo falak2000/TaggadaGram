@@ -64,7 +64,6 @@ public class PostService {
 //        List<Post> listPost = postRepository.findAllPostOfFollowing(user.getListFollowing());
         List<Post> listPost = new ArrayList<Post>();
         for(String follow : user.getListFollowing()){
-            System.out.println(follow);
            Optional<List<Post>> postlist = postRepository.findAllByUserId(follow);
            if(postlist.isPresent())
            listPost.addAll(postlist.get());

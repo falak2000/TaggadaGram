@@ -29,7 +29,6 @@ public class UserController {
 
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        System.out.println("login");
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
             if(loginResponse.isStatus()){
@@ -43,50 +42,41 @@ public class UserController {
             return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
-    public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
+    public ResponseEntity<PasswordUpdateStatus> newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
          PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
-         return passwordUpdateStatus;
+         return new ResponseEntity<PasswordUpdateStatus>(passwordUpdateStatus,HttpStatus.OK);
 
 
     }
 
 
     @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
-    public LogoutResponse logout(@RequestBody UserSign userSign){
-        //UserSign user=
-        System.out.println("logout");
-      return userService.logout(userSign);
-
-
+    public ResponseEntity<LogoutResponse> logout(@RequestBody UserSign userSign){
+      return new ResponseEntity<LogoutResponse>(userService.logout(userSign),HttpStatus.OK);
     }
 
 
     @PostMapping(value = "/follow")
-    public String follow(@RequestBody DoubleIdObject doubleIdObject){
-        String status=userService.followUser(doubleIdObject);
-        if(status.equals("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY"))
-            return "SUCCESSFULL followd";
-        else return "NOT SUCCESSFULL";
+    public ResponseEntity<StatusMsgResponse> follow(@RequestBody DoubleIdObject doubleIdObject){
+        StatusMsgResponse statusMsgResponse=userService.followUser(doubleIdObject);
+        return new ResponseEntity<StatusMsgResponse>(statusMsgResponse,HttpStatus.OK);
     }
 
     @PostMapping(value = "/unfollow")
-    public String unfollow(@RequestBody DoubleIdObject doubleIdObject){
-        String status= userService.unfollowUser(doubleIdObject);
-        if(status.equals("unfollow successfull")){
-            return "Unfollow Successfull";
-        }
-        else return "Unsuccessfull unfollow";
+    public ResponseEntity<StatusMsgResponse> unfollow(@RequestBody DoubleIdObject doubleIdObject){
+        StatusMsgResponse statusMsgResponse= userService.unfollowUser(doubleIdObject);
+        return new ResponseEntity<StatusMsgResponse>(statusMsgResponse,HttpStatus.OK);
     }
     @GetMapping(value = "/followers/{id}")
-    public List<UserSign> getFollowers(@PathVariable String id){
-       return  userService.getFollowers(id);
-
+    public ResponseEntity<List<UserSign>> getFollowers(@PathVariable String id){
+       return new ResponseEntity<List<UserSign>>(userService.getFollowers(id),HttpStatus.OK);
     }
 
     @GetMapping(value = "/following/{id}")
-    public List<UserSign> getFollowing(@PathVariable String id){
-       return userService.getFollowing(id);
+    public ResponseEntity<List<UserSign>> getFollowing(@PathVariable String id){
+       return new ResponseEntity<List<UserSign>>(userService.getFollowing(id),HttpStatus.OK);
        // return
     }
 

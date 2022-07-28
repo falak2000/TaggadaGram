@@ -126,11 +126,9 @@ public class UserSign {
     }
 
     public UserSign() {
-        System.out.println("inside no args constructor");
     };
 
     public UserSign(UserSign userSign){
-        System.out.println("inside all args constructor");
         this.id=userSign.id;
         this.firstname=userSign.firstname;
         this.lastname=userSign.lastname;
