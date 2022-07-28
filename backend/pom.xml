@@ -58,6 +58,17 @@
             <version>2.7.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-mongodb</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+
+        </dependency>
+
 
         <!--        JPA provides higher level of abstraction than the connector. But JPA needs connector-->
         <!--        Hibernate is a JPA tool. It implements the specification for the JPA-->

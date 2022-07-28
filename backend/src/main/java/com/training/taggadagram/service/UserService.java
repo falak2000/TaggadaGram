@@ -51,13 +51,16 @@ public class UserService {
         if(user == null){
             loginResponse.setStatus(false);
             loginResponse.setMessage("Not valid credentials");
+            loginResponse.setUserSign(user);
         }else if(user.getPassword().equals(BCrypt.hashpw(loginRequest.getPassword(),salt))){
             //user.getPassowrd() returns hashvalue
             loginResponse.setStatus(true);
             loginResponse.setMessage("Logged in");
+            loginResponse.setUserSign(user);
         }else{
             loginResponse.setStatus(false);
             loginResponse.setMessage("Failed");
+            loginResponse.setUserSign(null);
         }
         return loginResponse;
     }
