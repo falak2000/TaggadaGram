@@ -51,6 +51,15 @@ public class UserSign {
     }
 
     private String salt;
+    private String randomString;
+
+    public String getRandomString() {
+        return randomString;
+    }
+
+    public void setRandomString(String randomString) {
+        this.randomString = randomString;
+    }
 
     public String getSalt() {
         return salt;
