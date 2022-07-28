@@ -1,9 +1,12 @@
 package com.training.taggadagram.Entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 import javax.persistence.Column;
-import javax.persistence.Id;
+//import javax.persistence.Id;
+
 import java.util.List;
 
 @Document("User")

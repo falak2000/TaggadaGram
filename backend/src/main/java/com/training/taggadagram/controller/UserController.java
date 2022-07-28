@@ -41,6 +41,14 @@ public class UserController {
             return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
+    public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
+         PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
+         return passwordUpdateStatus;
+
+
+    }
+
 
     @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
     public LogoutResponse logout(@RequestBody UserSign userSign){
@@ -50,13 +58,7 @@ public class UserController {
 
 
     }
-    @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
-    public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
-        PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
-        return passwordUpdateStatus;
 
-
-    }
 
     @PostMapping(value = "/follow")
     public String follow(@RequestBody DoubleIdObject doubleIdObject){
