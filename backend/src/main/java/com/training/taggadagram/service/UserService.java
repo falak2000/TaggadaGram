@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -42,6 +44,20 @@ public class UserService {
         }
 
     }
+    public String randomString() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
 
     public LoginResponse authenticate(LoginRequest loginRequest){
         UserSign user = userRepository.findByEmail(loginRequest.getEmail());
@@ -56,7 +72,13 @@ public class UserService {
             //user.getPassowrd() returns hashvalue
             loginResponse.setStatus(true);
             loginResponse.setMessage("Logged in");
+
+            //String rand=randomString();
+            UUID uuid= UUID.randomUUID();
+            user.setRandomString(uuid.toString());
+
             loginResponse.setUserSign(user);
+            userRepository.save(user);
 
         }else{
             loginResponse.setStatus(false);
@@ -66,6 +88,28 @@ public class UserService {
         return loginResponse;
     }
 
+    public LogoutResponse logout(UserSign userSign){//uss time user ka information kaise retrieve karein
+        UserSign user=userRepository.findByEmail(userSign.getEmail());
+        LogoutResponse logoutResponse=new LogoutResponse();
+
+        if(user==null){//user doesn't exists in DB
+            logoutResponse.setMessage("User not found");
+            logoutResponse.setStatus(false);
+        }else if(user.getRandomString()!=null){
+            //delete the randomString(token) from database
+            user.setRandomString(null);
+
+            userRepository.save(user); //overwrite in DB
+
+            logoutResponse.setMessage("User Logged Out successfully,deleted the token");
+            logoutResponse.setStatus(true);
+            logoutResponse.setUserSign(user);
+        }else{
+            logoutResponse.setMessage("User is not logged in");
+            logoutResponse.setStatus(false);
+        }
+        return logoutResponse;
+    }
     public String followUser(DoubleIdObject doubleIdObject){
 
         //id1: followed user

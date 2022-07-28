@@ -27,6 +27,7 @@ public class UserController {
 
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        System.out.println("login");
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
             if(loginResponse.isStatus()){
@@ -39,6 +40,15 @@ public class UserController {
             LoginResponse loginResponse = null;
             return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
+    public LogoutResponse logout(@RequestBody UserSign userSign){
+        //UserSign user=
+        System.out.println("logout");
+      return userService.logout(userSign);
+
+
     }
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
     public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
