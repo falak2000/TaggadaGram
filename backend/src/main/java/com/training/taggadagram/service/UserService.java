@@ -49,7 +49,6 @@ public class UserService {
             loginResponse.setStatus(false);
             loginResponse.setMessage("Not valid credentials");
         }else if(user.getPassword().equals(BCrypt.hashpw(loginRequest.getPassword(),salt))){
-            //user.getPassowrd() returns hashvalue
             loginResponse.setStatus(true);
             loginResponse.setMessage("Logged in");
         }else{

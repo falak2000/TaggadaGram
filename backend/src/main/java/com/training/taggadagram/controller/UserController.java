@@ -22,11 +22,9 @@ public class UserController {
 
         RegisterResponse registerResponse= userService.register(user);
         return registerResponse;
-        //userService.register(user);
-        //return "FINALLY";
 
     }
-
+//  /login-> /api/{userid} -> /{user id}/
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         try{
