@@ -7,9 +7,7 @@ import com.training.taggadagram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -29,6 +27,7 @@ public class UserController {
 
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        System.out.println("login");
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
             if(loginResponse.isStatus()){
@@ -51,5 +50,50 @@ public class UserController {
     }
 
 
+    @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
+    public LogoutResponse logout(@RequestBody UserSign userSign){
+        //UserSign user=
+        System.out.println("logout");
+      return userService.logout(userSign);
+
+
+    }
+
+
+    @PostMapping(value = "/follow")
+    public String follow(@RequestBody DoubleIdObject doubleIdObject){
+        String status=userService.followUser(doubleIdObject);
+        if(status.equals("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY"))
+            return "SUCCESSFULL followd";
+        else return "NOT SUCCESSFULL";
+    }
+
+    @PostMapping(value = "/unfollow")
+    public String unfollow(@RequestBody DoubleIdObject doubleIdObject){
+        String status= userService.unfollowUser(doubleIdObject);
+        if(status.equals("unfollow successfull")){
+            return "Unfollow Successfull";
+        }
+        else return "Unsuccessfull unfollow";
+    }
+    @GetMapping(value = "/followers/{id}")
+    public String getFollowers(@PathVariable String id){
+        String status= userService.getFollowers(id);
+        if(status.equals("")){
+            return "NO RESULT";
+        }else{
+            return status;
+        }
+    }
+
+    @GetMapping(value = "/following/{id}")
+    public String getFollowing(@PathVariable String id){
+        String status= userService.getFollowing(id);
+        if(status.equals("")){
+            return "NO RESULT";
+        }else{
+            return status;
+        }
+    }
 
 }

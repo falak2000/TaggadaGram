@@ -4,14 +4,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
+import javax.persistence.Column;
+//import javax.persistence.Id;
+
 import java.util.List;
 
 @Document("User")
 public class UserSign {
+
     @Id
     private String id;
     private String firstname;
     private String lastname;
+
+    @Column(unique=true)
     private String email;
     private String password;
     private String role;
@@ -37,6 +43,15 @@ public class UserSign {
     }
 
     private String salt;
+    private String randomString;
+
+    public String getRandomString() {
+        return randomString;
+    }
+
+    public void setRandomString(String randomString) {
+        this.randomString = randomString;
+    }
 
     public String getSalt() {
         return salt;

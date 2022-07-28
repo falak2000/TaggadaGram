@@ -1,9 +1,10 @@
 package com.training.taggadagram.Entities;
 
-public class LoginResponse {
+import org.apache.catalina.User;
+
+public class LogoutResponse {
     private boolean status ;
     private String message;
-
     private UserSign userSign;
 
     public UserSign getUserSign() {
@@ -29,4 +30,7 @@ public class LoginResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    //private UserSign userSign;
+
 }
