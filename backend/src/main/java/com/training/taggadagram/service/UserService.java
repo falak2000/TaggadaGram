@@ -25,13 +25,12 @@ public class UserService {
         }else{
             //here we generate salt and hashed password using bcrypt
             String salt= BCrypt.gensalt();
-            System.out.println(salt);
 
             String hashedPassword=BCrypt.hashpw(user.getPassword(),salt); //using salt
             user.setPassword(hashedPassword); //storing hashed password
             user.setSalt(salt);//storing salt
-
-            userRepository.save(user); // Storing in database
+            UserSign userSign = new UserSign(user);
+            userRepository.save(userSign); // Storing in database
             registerResponse.setStatus(true);
             registerResponse.setMessage("Signup Successful");
             return registerResponse;
