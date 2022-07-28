@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 @RestController
 public class UserController {
 
@@ -22,7 +22,7 @@ public class UserController {
         return registerResponse;
 
     }
-//  /login-> /api/{userid} -> /{user id}/
+
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         try{
@@ -40,27 +40,19 @@ public class UserController {
     }
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
     public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
-<<<<<<< HEAD
          PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
          return passwordUpdateStatus;
 
 
     }
 
-=======
-        PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
-        return passwordUpdateStatus;
->>>>>>> 9f5238bbad07fbd947b0b53487616c14f590224c
-
-
-    }
 
     @PostMapping(value = "/follow")
     public String follow(@RequestBody DoubleIdObject doubleIdObject){
         String status=userService.followUser(doubleIdObject);
         if(status.equals("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY"))
-            return "SUCCESSFULL followd";
-        else return "NOT SUCCESSFULL";
+            return "SUCCESSFULL followed";
+        else return "NOT SUCCESSFULLY";
     }
 
     @PostMapping(value = "/unfollow")
@@ -90,5 +82,9 @@ public class UserController {
             return status;
         }
     }
-
+    @GetMapping (value= "/searchuser/{id}")
+    public List<UserSign> searchUser(@PathVariable  String id){
+        List<UserSign> userList = userService.getUser(id) ;
+         return userList;
+    }
 }
