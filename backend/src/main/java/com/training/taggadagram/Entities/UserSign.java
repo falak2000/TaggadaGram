@@ -1,6 +1,7 @@
 package com.training.taggadagram.Entities;
 
 import com.training.taggadagram.config.ValidPassword;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -34,6 +35,9 @@ public class UserSign {
     private List<String> listFollowers;
     private List<String> listFollowing;
 
+    private String salt;
+    private String token;
+
     public List<String> getListFollowers() {
         return listFollowers;
     }
@@ -50,15 +54,12 @@ public class UserSign {
         this.listFollowing = listFollowing;
     }
 
-    private String salt;
-    private String randomString;
-
-    public String getRandomString() {
-        return randomString;
+    public String getToken() {
+        return token;
     }
 
-    public void setRandomString(String randomString) {
-        this.randomString = randomString;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getSalt() {

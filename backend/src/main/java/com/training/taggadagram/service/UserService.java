@@ -2,20 +2,38 @@ package com.training.taggadagram.service;
 
 
 import com.training.taggadagram.Entities.*;
+import com.training.taggadagram.repository.AuthenticationRepository;
 import com.training.taggadagram.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    AuthenticationRepository authenticationRepository;
+
+    public Boolean isValideUser(String headerString){
+        AuthenticationEntity frontendAuthenticationEntity = brekDownToken(headerString);
+        Optional<AuthenticationEntity> authenticationEntity = authenticationRepository.findById(frontendAuthenticationEntity.getId());
+        if(authenticationEntity.isPresent()){
+            return authenticationEntity.get().getToken().equals(frontendAuthenticationEntity.getToken());
+        }else
+            return false;
+    }
+
+    public AuthenticationEntity brekDownToken(String headerString){
+        String[] arrOfStr = headerString.split(" ");
+        AuthenticationEntity authenticationEntity = new AuthenticationEntity();
+        authenticationEntity.setToken(arrOfStr[1]);
+        authenticationEntity.setId(arrOfStr[2]);
+        return authenticationEntity;
+    }
 
     public RegisterResponse register(UserSign user){
         //first encrypt the password and then store in DB
@@ -62,11 +80,16 @@ public class UserService {
 
             //String rand=randomString();
             UUID uuid= UUID.randomUUID();
-            user.setRandomString(uuid.toString());
+            user.setToken(uuid.toString());
 
             loginResponse.setUserSign(user);
             userRepository.save(user);
 
+            //saving for Authentication table
+            AuthenticationEntity authenticationEntity = new AuthenticationEntity();
+            authenticationEntity.setId(user.getId());
+            authenticationEntity.setToken(user.getToken());
+            authenticationRepository.save(authenticationEntity);
         }else{
             loginResponse.setStatus(false);
             loginResponse.setMessage("Failed");
@@ -83,15 +106,15 @@ public class UserService {
         if(user==null){//user doesn't exists in DB
             logoutResponse.setMessage("User not found");
             logoutResponse.setStatus(false);
-        }else if(user.getRandomString()!=null){
+        }else if(user.getToken()!=null){
             //delete the randomString(token) from database
-            user.setRandomString(null);
-
+            user.setToken(null);
             userRepository.save(user); //overwrite in DB
 
             logoutResponse.setMessage("User Logged Out successfully,deleted the token");
             logoutResponse.setStatus(true);
             logoutResponse.setUserSign(user);
+            authenticationRepository.deleteById(user.getId());
         }else{
             logoutResponse.setMessage("User is not logged in");
             logoutResponse.setStatus(false);

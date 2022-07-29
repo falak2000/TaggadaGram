@@ -19,7 +19,7 @@ public interface PostRepository extends MongoRepository<Post,String> {
 
 //  @Query("MATCH (p:post) WHERE p.postId in $ids RETURN as id")
 
-//    @Query("{userId:{$in:$followersIds}}")
-//    List<Post> findAllPostOfFollowing(@Param("followersIds") List<String> follower);
+    @Query("{userId:{$nin:?0}}")
+    Optional<List<Post>> findAllPostOfFollowing(List<String> follower);
 
 }

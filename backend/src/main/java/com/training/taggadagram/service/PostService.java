@@ -22,11 +22,10 @@ public class PostService {
     @Autowired
     UserRepository userRepository;
 
-    public PostResponse addPost(Post post){
-        PostResponse postResponse = new PostResponse();
+    public Post addPost(Post post){
+        Post postResponse = new Post();
         postRepository.save(post);
-        postResponse.setMsg("Post added Successfully");
-        postResponse.setStatus(true);
+        postResponse = postRepository.findByPostId(post.getPostId());
      return postResponse;
     }
 
@@ -59,15 +58,9 @@ public class PostService {
         return likeResponse;
     }
 
-    public List<Post> getNewsFeed(String userId){
+    public Optional<List<Post>> getNewsFeed(String userId){
         UserSign user = userRepository.findById(userId);
-//        List<Post> listPost = postRepository.findAllPostOfFollowing(user.getListFollowing());
-        List<Post> listPost = new ArrayList<Post>();
-        for(String follow : user.getListFollowing()){
-           Optional<List<Post>> postlist = postRepository.findAllByUserId(follow);
-           if(postlist.isPresent())
-           listPost.addAll(postlist.get());
-        }
+        Optional<List<Post>> listPost = postRepository.findAllPostOfFollowing(user.getListFollowing());
         return listPost;
     }
 
