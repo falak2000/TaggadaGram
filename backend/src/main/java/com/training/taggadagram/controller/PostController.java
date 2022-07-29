@@ -6,7 +6,7 @@ import com.training.taggadagram.Entities.Post;
 import com.training.taggadagram.Entities.PostResponse;
 import com.training.taggadagram.service.PostService;
 import com.training.taggadagram.service.UserService;
-import javafx.geometry.Pos;
+//import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
