@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+  
 
     public RegisterResponse register(UserSign user){
         //first encrypt the password and then store in DB
@@ -66,6 +66,8 @@ public class UserService {
 
             loginResponse.setUserSign(user);
             userRepository.save(user);
+
+
 
         }else{
             loginResponse.setStatus(false);
