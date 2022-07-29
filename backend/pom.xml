@@ -14,7 +14,12 @@
         <version>2.7.1</version>
     </parent>
 
+<!--
+springboot maven plugin inside build
+swagger.io file
 
+- account on heroku
+-->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
