@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 public class UserController {
@@ -23,8 +26,6 @@ public class UserController {
 
         RegisterResponse registerResponse= userService.register(user);
         return registerResponse;
-        //userService.register(user);
-        //return "FINALLY";
 
     }
 
@@ -71,6 +72,7 @@ public class UserController {
             return new ResponseEntity<StatusMsgResponse>(statusMsgResponse, HttpStatus.OK);
         }else
             return new ResponseEntity<StatusMsgResponse>(new StatusMsgResponse(),HttpStatus.NOT_FOUND);
+
     }
 
     @PostMapping(value = "/unfollow")
@@ -95,6 +97,11 @@ public class UserController {
             return new ResponseEntity<List<UserSign>>(userService.getFollowing(id), HttpStatus.OK);
         }else
             return new ResponseEntity<List<UserSign>>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+    }
+    @GetMapping (value= "/searchuser/{id}")
+    public List<UserSign> searchUser(@PathVariable  String id){
+        List<UserSign> userList = userService.getUser(id) ;
+         return userList;
     }
 
 }

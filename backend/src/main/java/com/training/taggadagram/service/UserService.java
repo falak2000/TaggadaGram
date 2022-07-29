@@ -7,8 +7,12 @@ import com.training.taggadagram.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import javax.management.Query;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import java.util.*;
 
 @Service
 public class UserService {
@@ -74,7 +78,6 @@ public class UserService {
             loginResponse.setMessage("Not valid credentials");
             loginResponse.setUserSign(user);
         }else if(user.getPassword().equals(BCrypt.hashpw(loginRequest.getPassword(),salt))){
-            //user.getPassowrd() returns hashvalue
             loginResponse.setStatus(true);
             loginResponse.setMessage("Logged in");
 
@@ -270,6 +273,11 @@ public class UserService {
         return passwordUpdateStatus ;
 
     }
+    public List<UserSign> getUser(String id){
+       List<UserSign> userSignList = userRepository.getUsers(id);
+       return userSignList;
+    }
+
 
 
 
