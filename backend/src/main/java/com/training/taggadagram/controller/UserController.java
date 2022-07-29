@@ -18,6 +18,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping(value="/register",consumes = "application/json",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public RegisterResponse register(@RequestBody UserSign user){
 
         RegisterResponse registerResponse= userService.register(user);
@@ -28,6 +29,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         System.out.println("login");
         try{
@@ -44,6 +46,7 @@ public class UserController {
         }
     }
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
          PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
          return passwordUpdateStatus;
@@ -53,6 +56,7 @@ public class UserController {
 
 
     @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public LogoutResponse logout(@RequestBody UserSign userSign){
         //UserSign user=
         System.out.println("logout");
@@ -63,6 +67,7 @@ public class UserController {
 
 
     @PostMapping(value = "/follow")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String follow(@RequestBody DoubleIdObject doubleIdObject){
         String status=userService.followUser(doubleIdObject);
         if(status.equals("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY"))
@@ -71,6 +76,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/unfollow")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String unfollow(@RequestBody DoubleIdObject doubleIdObject){
         String status= userService.unfollowUser(doubleIdObject);
         if(status.equals("unfollow successfull")){
@@ -85,6 +91,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/following/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public List<UserSign> getFollowing(@PathVariable String id){
        return userService.getFollowing(id);
        // return
