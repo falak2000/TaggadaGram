@@ -56,9 +56,12 @@
             <version>2.7.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
 
-        <!--        JPA provides higher level of abstraction than the connector. But JPA needs connector-->
-        <!--        Hibernate is a JPA tool. It implements the specification for the JPA-->
     </dependencies>
 
     <properties>

@@ -9,6 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 @RestController
 public class UserController {
 
@@ -28,6 +34,7 @@ public class UserController {
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
             if(loginResponse.isStatus()){
+
                 return new ResponseEntity<LoginResponse>(loginResponse, HttpStatus.OK);
             }
             else{
@@ -39,50 +46,57 @@ public class UserController {
         }
     }
 
-
-    // update password
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
-    public PasswordUpdateStatus newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity ){
-         PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
-         return passwordUpdateStatus;
-
-
+    public ResponseEntity<PasswordUpdateStatus> newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
+            return new ResponseEntity<PasswordUpdateStatus>(passwordUpdateStatus, HttpStatus.OK);
+        }else
+            return new ResponseEntity<PasswordUpdateStatus>(new PasswordUpdateStatus(),HttpStatus.NOT_FOUND);
     }
 
+
+    @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
+    public ResponseEntity<LogoutResponse> logout(@RequestBody UserSign userSign,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            return new ResponseEntity<LogoutResponse>(userService.logout(userSign), HttpStatus.OK);
+        }else
+            return new ResponseEntity<LogoutResponse>(new LogoutResponse(),HttpStatus.NOT_FOUND);
+    }
+
+
     @PostMapping(value = "/follow")
-    public String follow(@RequestBody DoubleIdObject doubleIdObject){
-        String status=userService.followUser(doubleIdObject);
-        if(status.equals("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY"))
-            return "SUCCESSFULL followed";
-        else return "NOT SUCCESSFULLY";
+    public ResponseEntity<StatusMsgResponse> follow(@RequestBody DoubleIdObject doubleIdObject,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            StatusMsgResponse statusMsgResponse = userService.followUser(doubleIdObject);
+            return new ResponseEntity<StatusMsgResponse>(statusMsgResponse, HttpStatus.OK);
+        }else
+            return new ResponseEntity<StatusMsgResponse>(new StatusMsgResponse(),HttpStatus.NOT_FOUND);
+
     }
 
     @PostMapping(value = "/unfollow")
-    public String unfollow(@RequestBody DoubleIdObject doubleIdObject){
-        String status= userService.unfollowUser(doubleIdObject);
-        if(status.equals("unfollow successfull")){
-            return "Unfollow Successfull";
-        }
-        else return "Unsuccessfull unfollow";
+    public ResponseEntity<StatusMsgResponse> unfollow(@RequestBody DoubleIdObject doubleIdObject,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            StatusMsgResponse statusMsgResponse = userService.unfollowUser(doubleIdObject);
+            return new ResponseEntity<StatusMsgResponse>(statusMsgResponse, HttpStatus.OK);
+        }else
+            return new ResponseEntity<StatusMsgResponse>(new StatusMsgResponse(), HttpStatus.NOT_FOUND);
     }
     @GetMapping(value = "/followers/{id}")
-    public String getFollowers(@PathVariable String id){
-        String status= userService.getFollowers(id);
-        if(status.equals("")){
-            return "NO RESULT";
-        }else{
-            return status;
-        }
+    public ResponseEntity<List<UserSign>> getFollowers(@PathVariable String id,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            return new ResponseEntity<List<UserSign>>(userService.getFollowers(id), HttpStatus.OK);
+        }else
+            return new ResponseEntity<List<UserSign>>(new ArrayList<>(), HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(value = "/following/{id}")
-    public String getFollowing(@PathVariable String id){
-        String status= userService.getFollowing(id);
-        if(status.equals("")){
-            return "NO RESULT";
-        }else{
-            return status;
-        }
+    public ResponseEntity<List<UserSign>> getFollowing(@PathVariable String id,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            return new ResponseEntity<List<UserSign>>(userService.getFollowing(id), HttpStatus.OK);
+        }else
+            return new ResponseEntity<List<UserSign>>(new ArrayList<>(), HttpStatus.NOT_FOUND);
     }
     @GetMapping (value= "/searchuser/{id}")
     public List<UserSign> searchUser(@PathVariable  String id){

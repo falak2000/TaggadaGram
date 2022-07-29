@@ -2,19 +2,42 @@ package com.training.taggadagram.service;
 
 
 import com.training.taggadagram.Entities.*;
+import com.training.taggadagram.repository.AuthenticationRepository;
 import com.training.taggadagram.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
 import javax.management.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    AuthenticationRepository authenticationRepository;
+
+    public Boolean isValideUser(String headerString){
+        AuthenticationEntity frontendAuthenticationEntity = brekDownToken(headerString);
+        Optional<AuthenticationEntity> authenticationEntity = authenticationRepository.findById(frontendAuthenticationEntity.getId());
+        if(authenticationEntity.isPresent()){
+            return authenticationEntity.get().getToken().equals(frontendAuthenticationEntity.getToken());
+        }else
+            return false;
+    }
+
+    public AuthenticationEntity brekDownToken(String headerString){
+        String[] arrOfStr = headerString.split(" ");
+        AuthenticationEntity authenticationEntity = new AuthenticationEntity();
+        authenticationEntity.setToken(arrOfStr[1]);
+        authenticationEntity.setId(arrOfStr[2]);
+        return authenticationEntity;
+    }
 
     public RegisterResponse register(UserSign user){
         //first encrypt the password and then store in DB
@@ -44,6 +67,7 @@ public class UserService {
 
     }
 
+
     public LoginResponse authenticate(LoginRequest loginRequest){
         UserSign user = userRepository.findByEmail(loginRequest.getEmail());
         LoginResponse loginResponse = new LoginResponse();
@@ -52,33 +76,70 @@ public class UserService {
         if(user == null){
             loginResponse.setStatus(false);
             loginResponse.setMessage("Not valid credentials");
+            loginResponse.setUserSign(user);
         }else if(user.getPassword().equals(BCrypt.hashpw(loginRequest.getPassword(),salt))){
             loginResponse.setStatus(true);
             loginResponse.setMessage("Logged in");
+
+            //String rand=randomString();
+            UUID uuid= UUID.randomUUID();
+            user.setToken(uuid.toString());
+
+            loginResponse.setUserSign(user);
+            userRepository.save(user);
+
+            //saving for Authentication table
+            AuthenticationEntity authenticationEntity = new AuthenticationEntity();
+            authenticationEntity.setId(user.getId());
+            authenticationEntity.setToken(user.getToken());
+            authenticationRepository.save(authenticationEntity);
         }else{
             loginResponse.setStatus(false);
             loginResponse.setMessage("Failed");
+            loginResponse.setUserSign(null);
         }
         return loginResponse;
     }
 
-    public String followUser(DoubleIdObject doubleIdObject){
+
+    public LogoutResponse logout(UserSign userSign){//uss time user ka information kaise retrieve karein
+        UserSign user=userRepository.findByEmail(userSign.getEmail());
+        LogoutResponse logoutResponse=new LogoutResponse();
+
+        if(user==null){//user doesn't exists in DB
+            logoutResponse.setMessage("User not found");
+            logoutResponse.setStatus(false);
+        }else if(user.getToken()!=null){
+            //delete the randomString(token) from database
+            user.setToken(null);
+            userRepository.save(user); //overwrite in DB
+
+            logoutResponse.setMessage("User Logged Out successfully,deleted the token");
+            logoutResponse.setStatus(true);
+            logoutResponse.setUserSign(user);
+            authenticationRepository.deleteById(user.getId());
+        }else{
+            logoutResponse.setMessage("User is not logged in");
+            logoutResponse.setStatus(false);
+        }
+        return logoutResponse;
+    }
+    public StatusMsgResponse followUser(DoubleIdObject doubleIdObject){
 
         //id1: followed user
         // id2: following user
 
         // 2 follow kar rha 1 ko, 2 ke following me 1,
+        StatusMsgResponse statusMsgResponse = new StatusMsgResponse();
         UserSign followedUser=userRepository.findById(doubleIdObject.getId1());
         UserSign follower=userRepository.findById(doubleIdObject.getId2());
 
         if(follower==null || followedUser==null){
-
-
-            return "follow unsuccessfull , either one of user is not present";
+            statusMsgResponse.setMsg("follow unsuccessfull , either one of user is not present");
+            statusMsgResponse.setStatus(false);
+            return statusMsgResponse;
         }else{
             //adding to follower list
-
-
             List<String> followerList = followedUser.getListFollowers();
             if (followerList == null) {
                 followerList = new ArrayList<>();
@@ -97,19 +158,23 @@ public class UserService {
             userRepository.save(followedUser);
             userRepository.save(follower);
 
-            return "FOLLOWER - FOLLOWING SAVED SUCCESSFULLY" ;
+            statusMsgResponse.setMsg("FOLLOWER - FOLLOWING SAVED SUCCESSFULLY");
+            statusMsgResponse.setStatus(true);
+
+            return statusMsgResponse ;
         }
 
     }
 
-    public String unfollowUser(DoubleIdObject doubleIdObject){
+    public StatusMsgResponse unfollowUser(DoubleIdObject doubleIdObject){
+        StatusMsgResponse statusMsgResponse = new StatusMsgResponse();
         UserSign followedUser=userRepository.findById(doubleIdObject.getId1());
         UserSign follower=userRepository.findById(doubleIdObject.getId2());
 
         if(follower==null || followedUser==null){
-
-
-            return "unfollow unsuccessfull , either one of user is not present";
+            statusMsgResponse.setMsg("unfollow unsuccessfull , either one of user is not present");
+            statusMsgResponse.setStatus(false);
+            return statusMsgResponse;
         }else{
             List<String> followerList = followedUser.getListFollowers();
             if (followerList == null) {
@@ -129,49 +194,57 @@ public class UserService {
             userRepository.save(followedUser);
             userRepository.save(follower);
 
-            return "unfollow successfull";
+            statusMsgResponse.setMsg("unfollow successfull");
+            statusMsgResponse.setStatus(true);
+            return statusMsgResponse;
         }
     }
-    public String getFollowers(String id){
+    public List<UserSign> getFollowers(String id){
         UserSign userSign=userRepository.findById(id);
+        List<UserSign> listOfFollowers=new ArrayList<>();
+
         if(userSign==null){
-            return "";
+            return new ArrayList<>();
         }else{
             List<String>followers=userSign.getListFollowers();
             if(followers==null){
-                return "";
+                return new ArrayList<>();
             }else{
 
                 String ans="";
-                for(String follower:followers){
+                for(String follower:followers){ //follower is ID here
                     UserSign temp=userRepository.findById(follower);
-                    ans=ans+" "+temp.getFirstname();
+                    listOfFollowers.add(temp);
                 }
 
-                return ans;
+                return listOfFollowers;
             }
         }
     }
 
-    public String getFollowing(String id){
+    public List<UserSign> getFollowing(String id){
         UserSign userSign=userRepository.findById(id);
+        List<UserSign> listOfFollowing=new ArrayList<>();
+
         if(userSign==null){
-            return "";
+            return new ArrayList<>();
         }else{
             List<String>following=userSign.getListFollowing();
             if(following==null){
-                return "";
+                return new ArrayList<>();
             }else{
                 String fans="";
                 for(String follow:following){
                     UserSign temp=userRepository.findById(follow);
-                    fans=fans+" "+temp.getFirstname();
+                    listOfFollowing.add(temp);
+
                 }
 
-                return fans;
+
             }
 
         }
+        return listOfFollowing;
     }
 
     public PasswordUpdateStatus updatePassword(PasswordUpdateEntity passwordUpdateEntity){
