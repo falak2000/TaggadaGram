@@ -7,6 +7,7 @@ import com.training.taggadagram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping(value="/register",consumes = "application/json",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
+
     public RegisterResponse register(@RequestBody UserSign user){
 
         RegisterResponse registerResponse= userService.register(user);
@@ -30,6 +33,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login",consumes = "application/json",produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         try{
             LoginResponse loginResponse = userService.authenticate(loginRequest);
@@ -47,6 +51,7 @@ public class UserController {
     }
 
     @PostMapping(value="/updatePassword", consumes = "application/json"  , produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<PasswordUpdateStatus> newPassword(@RequestBody PasswordUpdateEntity passwordUpdateEntity,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             PasswordUpdateStatus passwordUpdateStatus = userService.updatePassword(passwordUpdateEntity);
@@ -57,6 +62,7 @@ public class UserController {
 
 
     @PostMapping(value="/userlogout",consumes = "application/json",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<LogoutResponse> logout(@RequestBody UserSign userSign,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             return new ResponseEntity<LogoutResponse>(userService.logout(userSign), HttpStatus.OK);
@@ -66,6 +72,7 @@ public class UserController {
 
 
     @PostMapping(value = "/follow")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<StatusMsgResponse> follow(@RequestBody DoubleIdObject doubleIdObject,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             StatusMsgResponse statusMsgResponse = userService.followUser(doubleIdObject);
@@ -76,6 +83,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/unfollow")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<StatusMsgResponse> unfollow(@RequestBody DoubleIdObject doubleIdObject,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             StatusMsgResponse statusMsgResponse = userService.unfollowUser(doubleIdObject);
@@ -84,6 +92,7 @@ public class UserController {
             return new ResponseEntity<StatusMsgResponse>(new StatusMsgResponse(), HttpStatus.NOT_FOUND);
     }
     @GetMapping(value = "/followers/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<UserSign>> getFollowers(@PathVariable String id,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             return new ResponseEntity<List<UserSign>>(userService.getFollowers(id), HttpStatus.OK);
@@ -92,6 +101,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/following/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<UserSign>> getFollowing(@PathVariable String id,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             return new ResponseEntity<List<UserSign>>(userService.getFollowing(id), HttpStatus.OK);
@@ -99,9 +109,13 @@ public class UserController {
             return new ResponseEntity<List<UserSign>>(new ArrayList<>(), HttpStatus.NOT_FOUND);
     }
     @GetMapping (value= "/searchuser/{id}")
-    public List<UserSign> searchUser(@PathVariable  String id){
-        List<UserSign> userList = userService.getUser(id) ;
-         return userList;
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<List<UserSign>> searchUser(@PathVariable  String id,@RequestHeader("token") String headerString){
+        if(userService.isValideUser(headerString)){
+            List<UserSign> userList = userService.getUser(id);
+            return new ResponseEntity<List<UserSign>>(userList,HttpStatus.OK);
+        }else
+            return new ResponseEntity<List<UserSign>>(new ArrayList<UserSign>(),HttpStatus.NOT_FOUND);
     }
 
 }
