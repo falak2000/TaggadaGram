@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface UserRepository extends MongoRepository<UserSign,Long> {
     UserSign findByEmail(String email);
 
@@ -15,5 +18,6 @@ public interface UserRepository extends MongoRepository<UserSign,Long> {
     // searching user with username starting with id ;
     @Query(value="{id : {$regex : ?0}}")
     List<UserSign>getUsers(String id);
+
 
 }

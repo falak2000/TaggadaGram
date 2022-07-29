@@ -3,7 +3,7 @@ package com.training.taggadagram.service;
 import com.training.taggadagram.Entities.*;
 import com.training.taggadagram.repository.PostRepository;
 import com.training.taggadagram.repository.UserRepository;
-import javafx.geometry.Pos;
+//import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
