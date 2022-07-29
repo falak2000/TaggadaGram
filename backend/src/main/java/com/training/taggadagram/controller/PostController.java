@@ -30,6 +30,7 @@ public class PostController {
     UserService userService;
 
     @PostMapping(value="/addpost",consumes="application/json",produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Post> addPost(@RequestBody Post post,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             Post postResponse = postService.addPost(post);
@@ -39,6 +40,7 @@ public class PostController {
     }
 
     @GetMapping(value="/myposts/{userId}",produces="application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<Post>> myPost(@PathVariable String userId,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             Optional<List<Post>> listPost = postService.allMyPost(userId);
@@ -51,6 +53,7 @@ public class PostController {
     }
 
     @PostMapping(value="/likepost",consumes = "application/json",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<LikeResponse> likePost(@RequestBody IdUserPost idUserPost,@RequestHeader("token") String headerString ){
         if(userService.isValideUser(headerString)){
             LikeResponse likeResponse = postService.likePost(idUserPost);
@@ -60,6 +63,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/getnewsfeed/{userId}",produces = "application/json")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<Post>> getNewsFeed(@PathVariable String userId,@RequestHeader("token") String headerString){
         if(userService.isValideUser(headerString)){
             Optional<List<Post>> postList = postService.getNewsFeed(userId);
